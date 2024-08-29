@@ -16,10 +16,11 @@ services.AddCors(options =>
 {
     options.AddPolicy("MeriPolicy",
         builder => builder
-            .WithOrigins("http://2.56.212.108") // Add the frontend URL
+            //.WithOrigins("http://2.56.212.108") // Add the frontend URL
+            .AllowAnyOrigin()
             .AllowAnyMethod()
             .AllowAnyHeader()
-            .AllowCredentials());
+            );
 });
 
 services.AddSingleton<IDictionary<string, UserConnection>>(options => new Dictionary<string, UserConnection>());
