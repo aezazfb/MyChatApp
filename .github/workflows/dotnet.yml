@@ -17,6 +17,31 @@ jobs:
       with:
         dotnet-version: '8.0.x'
 
+    # ✅ Node.js setup for React frontend
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '22'  # Match your React app's Node version
+
+    # ✅ Install React app dependencies
+    - name: Install React dependencies
+      working-directory: ./ClientApp
+      run: npm ci
+
+    # ✅ Build React app
+    - name: Build React app
+      working-directory: ./ClientApp
+      run: npm run build
+
+    # 🔧 Optional: Move built frontend into .NET wwwroot if needed
+    # Depends on your .csproj setup
+    # Example: React output copied to wwwroot before publish
+    - name: Copy React build to wwwroot
+      run: |
+        rm -rf ./YourProject/wwwroot/*
+        cp -r ./ClientApp/build/* ./YourProject/wwwroot/
+
+    # ✅ Continue with .NET build
     - name: Build with dotnet
       run: dotnet build --configuration Release
 
@@ -26,6 +51,6 @@ jobs:
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
-        app-name: 'virtuous-curation'  # <- Your Azure App Service name
+        app-name: 'virtuous-curation'
         publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
         package: ./publish
