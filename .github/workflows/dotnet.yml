@@ -12,42 +12,43 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    # ✅ Set up Node.js 22
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '22'
+
+    # ✅ Install React dependencies
+    - name: Install React dependencies
+      working-directory: ./mychatapp.client
+      run: npm ci
+
+    # ✅ Build React app
+    - name: Build React app
+      working-directory: ./mychatapp.client
+      run: npm run build
+
+    # ✅ Copy React build output to .NET wwwroot
+    - name: Copy React build to wwwroot
+      run: |
+        rm -rf ./MyChatApp.Server/wwwroot/*
+        cp -r ./mychatapp.client/build/* ./MyChatApp.Server/wwwroot/
+
+    # ✅ Set up .NET 8
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '8.0.x'
 
-    # ✅ Node.js setup for React frontend
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '22'  # Match your React app's Node version
-
-    # ✅ Install React app dependencies
-    - name: Install React dependencies
-      working-directory: ./ClientApp
-      run: npm ci
-
-    # ✅ Build React app
-    - name: Build React app
-      working-directory: ./ClientApp
-      run: npm run build
-
-    # 🔧 Optional: Move built frontend into .NET wwwroot if needed
-    # Depends on your .csproj setup
-    # Example: React output copied to wwwroot before publish
-    - name: Copy React build to wwwroot
-      run: |
-        rm -rf ./YourProject/wwwroot/*
-        cp -r ./ClientApp/build/* ./YourProject/wwwroot/
-
-    # ✅ Continue with .NET build
+    # ✅ Build .NET backend
     - name: Build with dotnet
-      run: dotnet build --configuration Release
+      run: dotnet build MyChatApp.sln --configuration Release
 
+    # ✅ Publish .NET backend
     - name: Publish
-      run: dotnet publish --configuration Release --output ./publish
+      run: dotnet publish MyChatApp.Server/MyChatApp.Server.csproj --configuration Release --output ./publish
 
+    # ✅ Deploy to Azure
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
