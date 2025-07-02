@@ -10,45 +10,46 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    # 📦 Checkout the repository
     - uses: actions/checkout@v3
 
-    # ✅ Set up Node.js 22
+    # 🟦 Set up Node.js 22 for React/Vite
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '22'
 
-    # ✅ Install React dependencies
+    # 📥 Install React dependencies
     - name: Install React dependencies
       working-directory: ./mychatapp.client
       run: npm ci
 
-    # ✅ Build React app
+    # ⚙️ Build React app with Vite
     - name: Build React app
       working-directory: ./mychatapp.client
       run: npm run build
 
-    # ✅ Copy React build output to .NET wwwroot
+    # 🗂️ Copy Vite output (dist/) to .NET wwwroot
     - name: Copy React build to wwwroot
       run: |
         rm -rf ./MyChatApp.Server/wwwroot/*
-        cp -r ./mychatapp.client/build/* ./MyChatApp.Server/wwwroot/
+        cp -r ./mychatapp.client/dist/* ./MyChatApp.Server/wwwroot/
 
-    # ✅ Set up .NET 8
+    # 🟪 Set up .NET 8
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '8.0.x'
 
-    # ✅ Build .NET backend
+    # 🛠️ Build the .NET solution
     - name: Build with dotnet
       run: dotnet build MyChatApp.sln --configuration Release
 
-    # ✅ Publish .NET backend
+    # 📦 Publish the .NET backend to ./publish
     - name: Publish
       run: dotnet publish MyChatApp.Server/MyChatApp.Server.csproj --configuration Release --output ./publish
 
-    # ✅ Deploy to Azure
+    # 🚀 Deploy to Azure Web App
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
