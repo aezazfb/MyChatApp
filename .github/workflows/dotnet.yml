@@ -32,6 +32,7 @@ jobs:
     # 🗂️ Copy Vite output (dist/) to .NET wwwroot
     - name: Copy React build to wwwroot
       run: |
+        mkdir -p ./MyChatApp.Server/wwwroot
         rm -rf ./MyChatApp.Server/wwwroot/*
         cp -r ./mychatapp.client/dist/* ./MyChatApp.Server/wwwroot/
 
