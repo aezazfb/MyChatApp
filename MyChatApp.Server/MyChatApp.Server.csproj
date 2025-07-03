@@ -4,15 +4,15 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+
+    <!-- SPA proxy settings for dev-time integration -->
     <SpaRoot>..\mychatapp.client</SpaRoot>
     <SpaProxyLaunchCommand>npm run dev</SpaProxyLaunchCommand>
     <SpaProxyServerUrl>https://localhost:5173</SpaProxyServerUrl>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
-      <Version>8.*-*</Version>
-    </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="8.*-*" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
@@ -22,10 +22,17 @@
     </ProjectReference>
   </ItemGroup>
 
-<ItemGroup>
-  <Content Remove="..\mychatapp.client\dist\**" />
-  <None Remove="..\mychatapp.client\dist\**" />
-</ItemGroup>
+  <!-- Prevent duplication of static files from client -->
+  <ItemGroup>
+    <Content Remove="..\mychatapp.client\dist\**" />
+    <None Remove="..\mychatapp.client\dist\**" />
+  </ItemGroup>
 
+  <!-- Also ensure they’re not accidentally picked up for publish -->
+  <Target Name="ExcludeClientDistAssets" BeforeTargets="ComputeFilesToPublish">
+    <ItemGroup>
+      <ResolvedFileToPublish Remove="..\mychatapp.client\dist\**" />
+    </ItemGroup>
+  </Target>
 
 </Project>
