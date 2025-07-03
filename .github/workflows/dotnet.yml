@@ -30,20 +30,19 @@ jobs:
       run: |
         mkdir -p ./MyChatApp.Server/wwwroot
         rm -rf ./MyChatApp.Server/wwwroot/*
-        cp -r ./temp-client-build/* ./MyChatApp.Server/wwwroot/
+        cp -r ./mychatapp.client/dist/* ./MyChatApp.Server/wwwroot/
 
-    - name: Setup .NET
+    - name: Setup .NET SDK
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '8.0.x'
 
-    - name: Build .NET project
+    - name: Build .NET solution
       run: dotnet build MyChatApp.sln --configuration Release
 
-    - name: Publish .NET app
+    - name: Publish .NET project
       run: dotnet publish MyChatApp.Server/MyChatApp.Server.csproj --configuration Release --output ./publish
 
-    # ✅ Directly deploy using publish profile — NO azure/login needed
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
