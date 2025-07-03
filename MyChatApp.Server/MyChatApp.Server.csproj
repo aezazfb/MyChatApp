@@ -22,16 +22,14 @@
     </ProjectReference>
   </ItemGroup>
 
-  <!-- Prevent duplication of static files from client -->
+  <!-- Prevent conflicts by removing wwwroot/assets from publish -->
   <ItemGroup>
-    <Content Remove="..\mychatapp.client\dist\**" />
-    <None Remove="..\mychatapp.client\dist\**" />
+    <Content Remove="wwwroot/assets/**" />
   </ItemGroup>
 
-  <!-- Also ensure they’re not accidentally picked up for publish -->
-  <Target Name="ExcludeClientDistAssets" BeforeTargets="ComputeFilesToPublish">
+  <Target Name="ExcludeServerAssetsFolder" BeforeTargets="ComputeFilesToPublish">
     <ItemGroup>
-      <ResolvedFileToPublish Remove="..\mychatapp.client\dist\**" />
+      <ResolvedFileToPublish Remove="wwwroot/assets/**" />
     </ItemGroup>
   </Target>
 
