@@ -17,7 +17,6 @@ const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
 
 export default defineConfig(({ command }) => {
     if (command === 'serve') {
-        // Only attempt cert creation in dev mode
         if (!fs.existsSync(certFilePath) || !fs.existsSync(keyFilePath)) {
             const result = child_process.spawnSync('dotnet', [
                 'dev-certs',
@@ -31,7 +30,6 @@ export default defineConfig(({ command }) => {
 
             if (result.status !== 0) {
                 console.warn("Warning: Could not create HTTPS certificate for Vite dev server.");
-                // Don't throw here, just warn
             }
         }
     }
@@ -65,5 +63,8 @@ export default defineConfig(({ command }) => {
                     }
                     : false,
         },
+        build: {
+            outDir: '../temp-client-build'  // ✅ Avoid .NET static asset discovery
+        }
     };
 });
