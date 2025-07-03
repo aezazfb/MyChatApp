@@ -22,15 +22,9 @@
     </ProjectReference>
   </ItemGroup>
 
-  <!-- Prevent conflicts by removing wwwroot/assets from publish -->
   <ItemGroup>
-    <Content Remove="wwwroot/assets/**" />
+    <!-- Include all wwwroot static files to publish -->
+    <Content Include="wwwroot\**" CopyToPublishDirectory="PreserveNewest" />
   </ItemGroup>
-
-  <Target Name="ExcludeServerAssetsFolder" BeforeTargets="ComputeFilesToPublish">
-    <ItemGroup>
-      <ResolvedFileToPublish Remove="wwwroot/assets/**" />
-    </ItemGroup>
-  </Target>
 
 </Project>
