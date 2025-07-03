@@ -10,10 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 📦 Checkout the repository
+    # 📁 Checkout code
     - uses: actions/checkout@v3
 
-    # 🟦 Set up Node.js 22 for React/Vite
+    # ⚙️ Setup Node.js (for React/Vite)
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
@@ -24,32 +24,29 @@ jobs:
       working-directory: ./mychatapp.client
       run: npm ci
 
-    # ⚙️ Build React app with Vite
+    # 🏗️ Build React app (Vite will output to ../temp-client-build)
     - name: Build React app
       working-directory: ./mychatapp.client
       run: npm run build
 
-    # 🗂️ Clean and copy Vite output (dist/) to .NET wwwroot
-    - name: Clean and Copy React build to wwwroot
+    # 🗂️ Copy built files to .NET wwwroot
+    - name: Copy React build to wwwroot
       run: |
-        # Clean the wwwroot/assets to avoid conflicts
-        rm -rf ./MyChatApp.Server/wwwroot/assets/*
-
-        # Copy the new build output to wwwroot
         mkdir -p ./MyChatApp.Server/wwwroot
-        cp -r ./mychatapp.client/dist/* ./MyChatApp.Server/wwwroot/
+        rm -rf ./MyChatApp.Server/wwwroot/*
+        cp -r ./temp-client-build/* ./MyChatApp.Server/wwwroot/
 
-    # 🟪 Set up .NET 8
+    # ⚙️ Setup .NET 8 SDK
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '8.0.x'
 
-    # 🛠️ Build the .NET solution
+    # 🛠️ Build .NET solution
     - name: Build with dotnet
       run: dotnet build MyChatApp.sln --configuration Release
 
-    # 📦 Publish the .NET backend to ./publish
+    # 📦 Publish .NET project
     - name: Publish
       run: dotnet publish MyChatApp.Server/MyChatApp.Server.csproj --configuration Release --output ./publish
 
