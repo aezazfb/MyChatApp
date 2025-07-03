@@ -27,11 +27,14 @@ jobs:
       working-directory: ./mychatapp.client
       run: npm run build
 
+    - name: Debug temp-client-build contents
+      run: ls -la ./temp-client-build || echo "Build output not found"
+
     - name: Copy React build to wwwroot
       run: |
         mkdir -p ./MyChatApp.Server/wwwroot
         rm -rf ./MyChatApp.Server/wwwroot/*
-        cp -r ./mychatapp.client/dist/* ./MyChatApp.Server/wwwroot/
+        cp -r ./temp-client-build/* ./MyChatApp.Server/wwwroot/
 
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v3
