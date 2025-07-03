@@ -29,11 +29,14 @@ jobs:
       working-directory: ./mychatapp.client
       run: npm run build
 
-    # 🗂️ Copy Vite output (dist/) to .NET wwwroot
-    - name: Copy React build to wwwroot
+    # 🗂️ Clean and copy Vite output (dist/) to .NET wwwroot
+    - name: Clean and Copy React build to wwwroot
       run: |
+        # Clean the wwwroot/assets to avoid conflicts
+        rm -rf ./MyChatApp.Server/wwwroot/assets/*
+
+        # Copy the new build output to wwwroot
         mkdir -p ./MyChatApp.Server/wwwroot
-        rm -rf ./MyChatApp.Server/wwwroot/*
         cp -r ./mychatapp.client/dist/* ./MyChatApp.Server/wwwroot/
 
     # 🟪 Set up .NET 8
