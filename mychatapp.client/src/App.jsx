@@ -64,7 +64,7 @@ function App() {
     }
     return (
         <div className='app'>
-            <h2>MyChat!</h2>
+            <h2>My SAfe Chat!</h2>
             <hr className='line'></hr>
             {!cnnction ? <Lobby getInTheRoom={getInTheRoom} />
                 : <TheChat msgs={messagesRcvd} sendMessage={sendMsg} leaveRoom={leaveRoomFn} roomUsers={usersList} />
