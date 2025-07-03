@@ -10,56 +10,43 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 📁 Checkout source code
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # ⚙️ Setup Node.js for React
     - name: Setup Node.js
       uses: actions/setup-node@v3
       with:
         node-version: '22'
 
-    # 📦 Install React dependencies
     - name: Install React dependencies
       working-directory: ./mychatapp.client
       run: npm ci
 
-    # 🛠️ Build React app using Vite
     - name: Build React app
       working-directory: ./mychatapp.client
       run: npm run build
 
-    # 📂 Copy React build output to ASP.NET wwwroot
     - name: Copy React build to wwwroot
       run: |
         mkdir -p ./MyChatApp.Server/wwwroot
         rm -rf ./MyChatApp.Server/wwwroot/*
         cp -r ./temp-client-build/* ./MyChatApp.Server/wwwroot/
 
-    # ⚙️ Setup .NET 8
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: '8.0.x'
 
-    # 🛠️ Build .NET solution
     - name: Build .NET project
       run: dotnet build MyChatApp.sln --configuration Release
 
-    # 📦 Publish .NET app
     - name: Publish .NET app
       run: dotnet publish MyChatApp.Server/MyChatApp.Server.csproj --configuration Release --output ./publish
 
-    # 🔐 Login to Azure using publish profile
-    - name: Azure Login
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
-
-    # 🚀 Deploy to Azure Web App
+    # ✅ Directly deploy using publish profile — NO azure/login needed
     - name: Deploy to Azure Web App
       uses: azure/webapps-deploy@v2
       with:
         app-name: 'virtuous-curation'
         package: ./publish
+        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE }}
