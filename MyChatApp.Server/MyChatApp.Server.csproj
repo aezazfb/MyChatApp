@@ -22,9 +22,4 @@
     </ProjectReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <!-- Include all wwwroot static files to publish -->
-    <Content Include="wwwroot\**" CopyToPublishDirectory="PreserveNewest" />
-  </ItemGroup>
-
 </Project>
