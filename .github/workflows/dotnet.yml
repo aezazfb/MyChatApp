@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - production
+  workflow_dispatch:
 
 jobs:
   build-and-deploy:
@@ -28,9 +29,12 @@ jobs:
 
     - name: Copy React build to wwwroot
       run: |
+        rm -rf ./MyChatApp.Server/wwwroot
         mkdir -p ./MyChatApp.Server/wwwroot
-        rm -rf ./MyChatApp.Server/wwwroot/*
-        cp -r ./mychatapp.client/dist/* ./MyChatApp.Server/wwwroot/
+        cp -a ./temp-client-build/. ./MyChatApp.Server/wwwroot/
+
+    - name: Debug wwwroot contents
+      run: ls -R ./MyChatApp.Server/wwwroot
 
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v3
