@@ -22,4 +22,9 @@
     </ProjectReference>
   </ItemGroup>
 
+<ItemGroup>
+  <Content Remove="..\mychatapp.client\dist\**" />
+</ItemGroup>
+
+
 </Project>
