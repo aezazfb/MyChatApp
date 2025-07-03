@@ -34,7 +34,7 @@ jobs:
       run: |
         mkdir -p ./MyChatApp.Server/wwwroot
         rm -rf ./MyChatApp.Server/wwwroot/*
-        cp -r ./temp-client-build/* ./MyChatApp.Server/wwwroot/
+        cp -a ./temp-client-build/* ./MyChatApp.Server/wwwroot/
 
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v3
